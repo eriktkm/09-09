@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+    <html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>hello</title>
+        <style>
+            *{box-sizing: border-box;}
+            body{background: #f4f4f4; color: #222; margin: 0;
+            font-family: Arial, sans-serif;}
+            header{background: #e30613; color: #fff;
+            padding: 24px; text-align: center;}
+            main{width: min(700px, 92%); margin: 28px auto;}
+            form, article{background: white; padding: 18px;
+            margin-bottom: 14px;border-radius: 8px;}
+            input, textarea, button{width: 100%; padding: 11px;
+            margin: 8px 0 14px; font: inherit;}
+            textarea{min-height: 90px; resize: vertical;}
+            button{background: red; color: white; border: 0;
+            cursor: pointer; font-weight: bold;}
+            button:hover{background: red;}
+            h2{margin-top: 28px;}
+            article{border-left: 5px solid #e30613;}
+            article{border-left: 5px solid #e30613;}
+            #aviso{min-height: 22px; font-weight: bold;}
+        </style>
+    </head>
+    <body>
+        <header>
+                <h1>Mural de Recados</h1>
+                <p>Front + Java + JDBC + MYsql</p>
+        </header>
+        <main>
+            <form id="form-recados">
+                <label for="autor">nome</label>
+                <input id="autor" nome="autor" maxlength="80"     required>
+ 
+                <label for="mensagem">Recado</label>
+                <textarea id="mensagem" name="mensagem" maxlength="255" required>
+ 
+                </textarea>
+                <button type="submit">Publicar Recado</button>
+            </form>
+            <p id="aviso"></p>
+            <h2>Recados Publicados</h2>
+            <section id="listade-recados"></section>
+        </main>
+        <script>
+            const formulario = document.querySelector("#from-recado")
+            const lista = document.querySelector("#lista-recados")
+            const aviso = document.querySelector("#aviso")
+ 
+            async function carregarRecados(){
+                const resposta = await fetch("/api/recados")
+                const recado = await resposta.json()
+                lista.innerHTML = ""
+ 
+                for(const recado of recados){
+                    const cartao = document.createElement("article")
+                    const autor = document.createElement("strong")
+                    const mensagem = Document.createElement("p")
+ 
+                    autor.textContent = recado.autor
+                    mensagem.textContent = recado.mensagem
+                    cartao.append(autor, mensagem)
+                    lista.appendChild(cartao)
+                }
+            }
+            formulario.addEventListener("submit", async function (evento){
+                formulario.reset()
+                aviso.textContent = "Recado cadastrado com sucesso"
+                aviso.textContent = "Salvando..."
+                const dados = URLSearchParams(new FormData(formulario))
+                const resposta = await fetch("/api/recados",{
+                    method: "POST",
+                    body: dados
+                })
+                if(resposta.ok){
+                    formulario.reset()
+                    aviso.textContent = "Recado cadastrado com sucesso!!!"
+                }
+            })
+        </script>
+    </body>
+    </html>
